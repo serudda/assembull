@@ -1,11 +1,17 @@
+/************************************/
+/*           DEPENDENCIES           */
+/************************************/
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import './index.css';
+import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root') as HTMLElement
-);
-registerServiceWorker();
+import App from './components/pages/App/App';
+
+
+/*         RENDER         */
+/**************************/
+render((
+    <Router>
+        <App />
+    </Router>
+), document.getElementById('root'));
