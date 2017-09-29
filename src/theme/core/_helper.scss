@@ -319,6 +319,8 @@ NOTE: Boostrap 4 has a flex set
 .fontStyle-italic {font-style: italic;}
 .fontStyle-normal {font-style:normal;}
 
+.textDecoration-underline {text-decoration: underline;}
+
 .link-reset {text-decoration: none!important;}
 
 .fontSmoothing-reset {-webkit-font-smoothing: initial;}
@@ -328,6 +330,12 @@ NOTE: Boostrap 4 has a flex set
 /**
  *  BORDER
  */
+
+/* Border type */
+.borderStyle-dotted {border-style: dotted;}
+.borderStyle-dashed {border-style: dashed;}
+.borderStyle-solid  {border-style: solid;}
+
 
 /* Border scale */
 .border-0 {border: 0 hidden transparent;}

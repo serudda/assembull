@@ -3,7 +3,9 @@
 /************************************/
 import * as React from 'react';
 
+import Header from '../../common/Header/Header.presentation';
 import Main from '../Main/Main.presentation';
+import Footer from '../../common/Footer/Footer.presentation';
 import './App.css'; 
 
 
@@ -20,7 +22,9 @@ class App extends React.Component {
     render() {
         return (
             <div className="AppContent">
+                <Header />
                 <Main />
+                <Footer />
             </div>
         );
     }
