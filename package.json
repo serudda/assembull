@@ -3,17 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/graphql": "^0.11.4",
+    "@types/react-addons-test-utils": "^0.14.20",
+    "@types/react-dom": "^15.5.5",
+    "@types/react-redux": "^5.0.9",
     "@types/react-router": "^4.0.15",
     "@types/react-router-config": "^1.0.4",
     "@types/react-router-dom": "^4.0.8",
     "@types/react-router-redux": "^5.0.8",
+    "@types/redux-devtools-extension": "^2.13.2",
+    "@types/redux-logger": "^3.0.4",
+    "graphql": "^0.11.6",
+    "graphql-tag": "^2.4.2",
     "react": "^16.0.0",
+    "react-addons-test-utils": "^15.6.2",
+    "react-apollo": "1.4.15",
     "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
-    "react-scripts-ts": "2.7.0"
+    "react-scripts-ts": "2.7.0",
+    "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.2",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
@@ -24,10 +38,14 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/enzyme": "^2.8.9",
     "@types/jest": "^21.1.1",
     "@types/node": "^8.0.31",
     "@types/react": "^16.0.7",
     "@types/react-dom": "^15.5.5",
-    "node-sass-chokidar": "0.0.3"
+    "enzyme": "^3.0.0",
+    "node-sass-chokidar": "0.0.3",
+    "react-addons-test-utils": "^15.6.2",
+    "react-test-renderer": "^16.0.0"
   }
 }
