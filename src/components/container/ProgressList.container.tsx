@@ -2,10 +2,15 @@
 /*         DEPENDENCIES         */
 /********************************/
 import * as React from 'react';
+import { graphql, compose, ChildProps } from 'react-apollo';
+
+import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combination.mutation';
+import { GET_ALL_THINGS_QUERY } from '../../models/thing/thing.query';
+
+import { Status } from '../../models/combination/combination.model';
 import { Part } from '../../models/part/part.model';
 
 import ProgressList from '../common/ProgressList/ProgressList';
-import { Status } from '../../models/combination/combination.model';
 
 // -----------------------------------
 
@@ -24,7 +29,7 @@ type ProgressListContainerProps = {
 /*              CLASS DEFINITION               */
 /***********************************************/
 class ProgressListContainer 
-extends React.Component<ProgressListContainerProps, {}> {
+extends React.Component<ChildProps<ProgressListContainerProps, {}>, {}> {
 
     
     /********************************/
@@ -68,12 +73,6 @@ extends React.Component<ProgressListContainerProps, {}> {
      * @returns {void}
      */
     private _checkMyProgress() {
-        /* TODO: Aqui deberia tomar las combinaciones de cada parte, 
-            validar que sus distancias se encuentre en el rango (min y max), 
-            y setear en la propiedad: status, el status actual de dicha combinación */
-        
-        // tslint:disable-next-line:no-console
-        console.log('ENUM STATUS OK: ', Status.OK);
 
         // Select each part to see its combinations
         this.props.parts.forEach(part => {
@@ -86,9 +85,41 @@ extends React.Component<ProgressListContainerProps, {}> {
                 
                 if (combination.distance >= combination.min &&
                     combination.distance <= combination.max) {
-                    // combination.status = Status.OK; 
+                    
+                    // STATUS OK
+                    let input = {
+                        status: Status.OK,
+                        id: combination.id
+                    };
+
+                    this.props.mutate({
+                        variables: {input},
+                        refetchQueries: [ { query: GET_ALL_THINGS_QUERY }],
+                    }).then(
+                        () => {
+                            // tslint:disable-next-line:no-console
+                            console.log('STATUS UPDATED', input);   
+                        }
+                    );
+
                 } else {
-                    // combination.status = Status.WARNING;
+                    
+                    // STATUS WARNING
+                    let input = {
+                        status: Status.WARNING,
+                        id: combination.id
+                    };
+
+                    this.props.mutate({
+                        variables: {input},
+                        refetchQueries: [ { query: GET_ALL_THINGS_QUERY }],
+                    }).then(
+                        () => {
+                            // tslint:disable-next-line:no-console
+                            console.log('STATUS UPDATED', input);
+                        }
+                    );
+
                 }
 
             });
@@ -186,6 +217,16 @@ extends React.Component<ProgressListContainerProps, {}> {
 }
 
 
+/********************************/
+/*           MUTATION           */
+/********************************/
+const updateCombinationMutation = graphql<any, any>(
+    UPDATE_COMBINATION_MUTATION
+);
+
+
 /*         EXPORT          */
 /***************************/
-export default ProgressListContainer;
+export default compose(
+    updateCombinationMutation
+)(ProgressListContainer);
