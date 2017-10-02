@@ -19,7 +19,6 @@ import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combinatio
 /* Own Props */
 type RealTimeSensorListContainerProps = {
     parts: Array<Part>;
-    open: boolean;
 };
 
 
@@ -126,45 +125,38 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
         /*       PROPERTIES       */
         /**************************/
         const {
-            parts,
-            open
+            parts
         } = this.props;
                     
         
         /*         MARKUP          */
         /***************************/
         return (
-            <div>
+            <section className="RealTimeSensorListContainer container">             
 
-                {open &&
-                    <section className="RealTimeSensorListContainer container">             
+                {/* Title */}
+                <div className="row mb-4">
+                    <div className="col text-center">
+                        <h3>
+                            Real-Time Sensor Manage
+                        </h3>
+                    </div>
+                </div>{/* Real-time sensor ranges list */}
+                <RealTimeSensorList parts={parts}/>
 
-                        {/* Title */}
-                        <div className="row mb-4">
-                            <div className="col text-center">
-                                <h3>
-                                    Real-Time Sensor Manage
-                                </h3>
-                            </div>
-                        </div>{/* Real-time sensor ranges list */}
-                        <RealTimeSensorList parts={parts}/>
+                <hr className="borderStyle-dashed mb-5" />
 
-                        <hr className="borderStyle-dashed mb-5" />
+                {/* Save new distances */}
+                <div className="row mb-5">
+                    <div className="col">
+                        <button className="btn btn-success btn-lg btn-block"
+                                onClick={() => this._handleClick(this)}>
+                            Save
+                        </button>
+                    </div>
+                </div>
 
-                        {/* Save new distances */}
-                        <div className="row mb-5">
-                            <div className="col">
-                                <button className="btn btn-success btn-lg btn-block"
-                                        onClick={() => this._handleClick(this)}>
-                                    Save
-                                </button>
-                            </div>
-                        </div>
-
-                    </section>
-                }
-
-            </div>
+            </section>
         );
 
 

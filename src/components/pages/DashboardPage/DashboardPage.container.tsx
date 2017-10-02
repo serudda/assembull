@@ -32,7 +32,9 @@ type IStateProps = {
 /* Mapped Dispatches to Props */
 type IDispatchProps = {
     actions: {
-        ui: () => void;
+        ui: {
+            openRealTimeSection: () => void;
+        }
     };
 };
 
@@ -116,7 +118,7 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
      */
     _openRealTimeSection() {
         // tslint:disable-next-line:no-console
-        this.props.actions.ui();
+        this.props.actions.ui.openRealTimeSection();
     }
 
     
@@ -151,8 +153,8 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
         /***************************/
         return (
             <div className="DashboardPage">
-                <ProgressListContainer parts={data.thing.parts}/>
-                <RealTimeSensorListContainer parts={data.thing.parts} open={ui.openRealTimeSection}/>
+                {!ui.openRealTimeSection && <ProgressListContainer parts={data.thing.parts}/>}
+                {ui.openRealTimeSection && <RealTimeSensorListContainer parts={data.thing.parts}/>}
 
                 <hr className="m-4" />
                 
@@ -193,7 +195,9 @@ function mapStateToProps(state: IRootState): IStateProps {
 function mapDispatchToProps(dispatch: Dispatch<IRootState>): IDispatchProps {
     return {
         actions:  {
-            ui:  () => dispatch(openRealTimeSectionAction())    
+            ui: {
+                openRealTimeSection: () => dispatch(openRealTimeSectionAction())
+            }
         }
     };
 }

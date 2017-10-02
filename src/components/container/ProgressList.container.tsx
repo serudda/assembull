@@ -187,27 +187,31 @@ extends React.Component<ChildProps<ProgressListContainerProps, {}>, {}> {
         /*         MARKUP          */
         /***************************/
         return (
-            <section className="ProgressListContainer container">
+            <div>
+                {open && 
+                    <section className="ProgressListContainer container">
                 
-                {/* Progress List */}
-                <ProgressList parts={parts}/>
+                        {/* Progress List */}
+                        <ProgressList parts={parts}/>
 
-                <hr className="m-4" />
-                
-                {/* Footer section */}
-                <div className="row">
-                    <div className="col text-center">
+                        <hr className="m-4" />
+                        
+                        {/* Footer section */}
+                        <div className="row">
+                            <div className="col text-center">
 
-                        {/* Check my progress button */}
-                        <button className="btn btn-primary btn-lg btn-block mb-2"
-                                onClick={this._handleClick}>
-                            Check my progress
-                        </button>
+                                {/* Check my progress button */}
+                                <button className="btn btn-primary btn-lg btn-block mb-2"
+                                        onClick={this._handleClick}>
+                                    Check my progress
+                                </button>
 
-                    </div>
-                </div>
+                            </div>
+                        </div>
 
-            </section>
+                    </section>
+                }
+            </div>
         );
 
 
