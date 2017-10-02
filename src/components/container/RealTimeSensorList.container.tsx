@@ -4,13 +4,10 @@
 import * as React from 'react';
 import { graphql, compose, ChildProps } from 'react-apollo';
 
-import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combination.mutation';
-import { GET_ALL_THINGS_QUERY } from '../../models/thing/thing.query';
-
-import { Status } from '../../models/combination/combination.model';
 import { Part } from '../../models/part/part.model';
 
-import ProgressList from '../common/ProgressList/ProgressList';
+import RealTimeSensorList from '../common/RealTimeSensorList/RealTimeSensorList';
+import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combination.mutation';
 
 // -----------------------------------
 
@@ -20,16 +17,17 @@ import ProgressList from '../common/ProgressList/ProgressList';
 /********************************/
 
 /* Own Props */
-type ProgressListContainerProps = {
+type RealTimeSensorListContainerProps = {
     parts: Array<Part>;
+    open: boolean;
 };
 
 
 /***********************************************/
 /*              CLASS DEFINITION               */
 /***********************************************/
-class ProgressListContainer 
-extends React.Component<ChildProps<ProgressListContainerProps, {}>, {}> {
+class RealTimeSensorListContainer 
+extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
 
     
     /********************************/
@@ -61,71 +59,19 @@ extends React.Component<ChildProps<ProgressListContainerProps, {}>, {}> {
      */
     private _handleClick (e: any) {
         e.preventDefault();
-        this._checkMyProgress();
+        this._saveDistances();
     }
 
 
     /**
-     * @desc Check Progress
-     * @method _checkMyProgress
-     * @example this._checkMyProgress()
+     * @desc Save Distances
+     * @method _saveDistances
+     * @example this._saveDistances()
      * @private 
      * @returns {void}
      */
-    private _checkMyProgress() {
-
-        // Select each part to see its combinations
-        this.props.parts.forEach(part => {
-            
-            /* 
-             Select each combination in order to validate if the distance is 
-             into min and max range
-            */
-            part.combinations.forEach(combination => {
-                
-                if (combination.distance >= combination.min &&
-                    combination.distance <= combination.max) {
-                    
-                    // STATUS OK
-                    let input = {
-                        status: Status.OK,
-                        id: combination.id
-                    };
-
-                    this.props.mutate({
-                        variables: {input},
-                        refetchQueries: [ { query: GET_ALL_THINGS_QUERY }],
-                    }).then(
-                        () => {
-                            // tslint:disable-next-line:no-console
-                            console.log('STATUS UPDATED', input);   
-                        }
-                    );
-
-                } else {
-                    
-                    // STATUS WARNING
-                    let input = {
-                        status: Status.WARNING,
-                        id: combination.id
-                    };
-
-                    this.props.mutate({
-                        variables: {input},
-                        refetchQueries: [ { query: GET_ALL_THINGS_QUERY }],
-                    }).then(
-                        () => {
-                            // tslint:disable-next-line:no-console
-                            console.log('STATUS UPDATED', input);
-                        }
-                    );
-
-                }
-
-            });
-
-
-        });
+    private _saveDistances() {
+        // Save changes 
     }
 
 
@@ -180,34 +126,45 @@ extends React.Component<ChildProps<ProgressListContainerProps, {}>, {}> {
         /*       PROPERTIES       */
         /**************************/
         const {
-            parts
+            parts,
+            open
         } = this.props;
                     
         
         /*         MARKUP          */
         /***************************/
         return (
-            <section className="ProgressListContainer container">
-                
-                {/* Progress List */}
-                <ProgressList parts={parts}/>
+            <div>
 
-                <hr className="m-4" />
-                
-                {/* Footer section */}
-                <div className="row">
-                    <div className="col text-center">
+                {open &&
+                    <section className="RealTimeSensorListContainer container">             
 
-                        {/* Check my progress button */}
-                        <button className="btn btn-primary btn-lg btn-block mb-2"
-                                onClick={this._handleClick}>
-                            Check my progress
-                        </button>
+                        {/* Title */}
+                        <div className="row mb-4">
+                            <div className="col text-center">
+                                <h3>
+                                    Real-Time Sensor Manage
+                                </h3>
+                            </div>
+                        </div>{/* Real-time sensor ranges list */}
+                        <RealTimeSensorList parts={parts}/>
 
-                    </div>
-                </div>
+                        <hr className="borderStyle-dashed mb-5" />
 
-            </section>
+                        {/* Save new distances */}
+                        <div className="row mb-5">
+                            <div className="col">
+                                <button className="btn btn-success btn-lg btn-block"
+                                        onClick={() => this._handleClick(this)}>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                    </section>
+                }
+
+            </div>
         );
 
 
@@ -229,4 +186,4 @@ const updateCombinationMutation = graphql<any, any>(
 /***************************/
 export default compose(
     updateCombinationMutation
-)(ProgressListContainer);
+)(RealTimeSensorListContainer);

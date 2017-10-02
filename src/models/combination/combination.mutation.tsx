@@ -13,6 +13,7 @@ export const UPDATE_COMBINATION_MUTATION = gql`
         updateCombination(input: $input) {
           id
           min
+          distance
         }
     }
 `;
@@ -26,12 +27,13 @@ mutation updateCombination($input: UpdateCombinationInput!){
     updateCombination(input: $input) {
       id
       status
+      distance
     }
 }
 
 Query Variables:
 {
-  "input": {"id": 1, "status": "OK"}
+  "input": {"id": 1, "status": "OK", "distance": 23}
 }
 
 */

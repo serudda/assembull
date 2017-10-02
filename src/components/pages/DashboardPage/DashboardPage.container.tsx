@@ -3,11 +3,17 @@
 /********************************/
 import * as React from 'react';
 import { graphql, compose, ChildProps } from 'react-apollo';
+import { connect, Dispatch } from 'react-redux';
 
 // Las dependencias de mis queries, mutations, subscriptions
 import { GET_THING_BY_ID_QUERY, GetByIdResponse } from '../../../models/thing/thing.query';
 
+import { openRealTimeSectionAction } from '../../../actions/ui.action';
+import { IRootState } from '../../../reducers/reducer.config';
+import { IUiState } from '../../../reducers/ui.reducer';
+
 import ProgressListContainer from '../../container/ProgressList.container';
+import RealTimeSensorListContainer from '../../container/RealTimeSensorList.container';
 // -----------------------------------
 
 
@@ -15,8 +21,22 @@ import ProgressListContainer from '../../container/ProgressList.container';
 /*      INTERFACES & TYPES      */
 /********************************/
 
+/* Own Props */
 type DashboardPageProps = {/**/};
 
+/* Mapped State to Props */
+type IStateProps = {
+    ui: IUiState;
+};
+
+/* Mapped Dispatches to Props */
+type IDispatchProps = {
+    actions: {
+        ui: () => void;
+    };
+};
+
+/* Input Props Query */
 type InputProps = {
     match: {
         params: {
@@ -30,27 +50,24 @@ type InputProps = {
 /*              CLASS DEFINITION               */
 /***********************************************/
 class DashboardPage 
-extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
+extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchProps, GetByIdResponse>, {}> {
     
     
     /********************************/
     /*         CONSTRUCTOR          */
     /********************************/
-    constructor() {
-        
+    constructor() {        
         super();
-        
-        // Bind methods
-        // this.toggleChecked = this.toggleChecked.bind(this);
-        // this._handleChange = this._handleChange.bind(this);
 
+        // Bind methods
+        this._handleClick = this._handleClick.bind(this);
     }
 
 
     /********************************/
     /*       COMPONENTDIDMOUNT      */
     /********************************/
-    componentDidMount() {   
+    componentDidMount() {
         /* NOTE: Se invoca una sola vez, 
         inmediatamente DESPUES de que el renderizado inicial ocurra */
     }
@@ -59,7 +76,7 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
     /********************************/
     /*      COMPONENTWILLMOUNT      */
     /********************************/
-    componentWillMount() {  
+    componentWillMount() {
         /* NOTE: Se invoca una sola vez, 
         inmediatamente ANTES de que el renderizado inicial ocurra */
     }
@@ -68,25 +85,9 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
     /********************************/
     /*      COMPONENTWILLUNMOUNT    */
     /********************************/
-    componentWillUnmount() {        
+    componentWillUnmount() {   
         /* NOTE: Se invoca inmediatamente ANTES de que 
             el el componente es desmontado del el DOM */
-    }
-
-
-    /********************************/
-    /*        PUBLIC METHODS        */
-    /********************************/
-
-    /**
-     * @desc Method description
-     * @method toggleChecked
-     * @example this.toggleChecked()
-     * @public
-     * @returns {void}
-     */
-    toggleChecked(): void {
-        //
     }
 
 
@@ -95,14 +96,27 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
     /********************************/
 
     /**
-     * @desc Method description
-     * @method _handleChange
-     * @example this._handleChange()
+     * @desc Handle Real-time sensor manage Click
+     * @method _handleClick
+     * @example this._handleClick()
      * @private 
      * @returns {void}
      */
-    _handleChange = (event: Event) => {
-        event.preventDefault();
+    _handleClick = (e: any) => {
+        e.preventDefault();
+        this._openRealTimeSection();
+    }
+
+    /**
+     * @desc Open Real-time section
+     * @method _openRealTimeSection
+     * @example this._openRealTimeSection()
+     * @private 
+     * @returns {void}
+     */
+    _openRealTimeSection() {
+        // tslint:disable-next-line:no-console
+        this.props.actions.ui();
     }
 
     
@@ -114,9 +128,8 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
 
         /*       PROPERTIES       */
         /**************************/
-        /* TODO: Estudiar por que si hago la destructuracion como en 
-        Stylepills, me lanza error de type */
         const {...data} = this.props.data;
+        const{...ui} = this.props.ui;
 
 
         /*       VALIDATIONS       */
@@ -139,6 +152,22 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
         return (
             <div className="DashboardPage">
                 <ProgressListContainer parts={data.thing.parts}/>
+                <RealTimeSensorListContainer parts={data.thing.parts} open={ui.openRealTimeSection}/>
+
+                <hr className="m-4" />
+                
+                {/* Go to Real-time section and Baseline section */}
+                <div className="row">
+                    <div className="col text-center">
+                        <button className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
+                                onClick={this._handleClick}>
+                            Real-time sensor manage
+                        </button>
+                        <button className="color-silver fontSize-xl fontWeight-2 textDecoration-underline">
+                            Baseline sensor manage
+                        </button>
+                    </div>
+                </div>
             </div>
         );
 
@@ -148,16 +177,38 @@ extends React.Component<ChildProps<DashboardPageProps, GetByIdResponse>, {}> {
 }
 
 
+
+/********************************/
+/*      MAP STATE TO PROPS      */
+/********************************/
+function mapStateToProps(state: IRootState): IStateProps {
+    return {
+        ui:  state.ui
+    };
+}
+
+/********************************/
+/*     MAP DISPATCH TO PROPS    */
+/********************************/
+function mapDispatchToProps(dispatch: Dispatch<IRootState>): IDispatchProps {
+    return {
+        actions:  {
+            ui:  () => dispatch(openRealTimeSectionAction())    
+        }
+    };
+}
+
+
 /********************************/
 /*            QUERY             */
 /********************************/
-const getUiComponentByIdQuery = graphql<GetByIdResponse, DashboardPageProps>(
+const getUiComponentByIdQuery = graphql<GetByIdResponse,  DashboardPageProps>(
     GET_THING_BY_ID_QUERY, {
-        options: (ownProps: InputProps) => (
+        options:  (ownProps: InputProps) => (
             { 
                 variables: 
-                { 
-                    id: ownProps.match.params.id 
+                 { 
+                    id:  ownProps.match.params.id 
                 } 
             }
         )
@@ -165,8 +216,15 @@ const getUiComponentByIdQuery = graphql<GetByIdResponse, DashboardPageProps>(
 );
 
 
+/********************************/
+/*         REDUX CONNECT        */
+/********************************/
+const dashboardPageConnect = connect(mapStateToProps, mapDispatchToProps); 
+
+
 /*         EXPORT          */
 /***************************/
 export default compose(
-    getUiComponentByIdQuery
+    getUiComponentByIdQuery,
+    dashboardPageConnect
 )(DashboardPage);

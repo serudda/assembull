@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 import { ApolloClient } from 'react-apollo';
 
-import rootReducer from '../reducer/reducer.config';
+import rootReducer from '../reducers/reducer.config';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 
