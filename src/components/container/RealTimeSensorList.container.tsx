@@ -8,6 +8,7 @@ import { Part } from '../../models/part/part.model';
 
 import RealTimeSensorList from '../common/RealTimeSensorList/RealTimeSensorList';
 import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combination.mutation';
+import { GET_ALL_THINGS_QUERY } from '../../models/thing/thing.query';
 
 // -----------------------------------
 
@@ -21,12 +22,19 @@ type RealTimeSensorListContainerProps = {
     parts: Array<Part>;
 };
 
+type LocalStates = { 
+    combinationsUpdated: Array<{
+        id: number,
+        distance: string
+    }>;
+};
+
 
 /***********************************************/
 /*              CLASS DEFINITION               */
 /***********************************************/
 class RealTimeSensorListContainer 
-extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
+extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, LocalStates> {
 
     
     /********************************/
@@ -38,9 +46,14 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
         automáticamente para usted.
         reference: http://cheng.logdown.com/posts/2016/03/26/683329 */
         super();
+
+        this.state = {
+            combinationsUpdated: []
+        };
         
         // Bind methods
         this._handleClick = this._handleClick.bind(this);
+        this._handleChange = this._handleChange.bind(this);
 
     }
 
@@ -48,6 +61,32 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
     /********************************/
     /*       PRIVATE METHODS        */
     /********************************/
+
+    /**
+     * @desc HandleChange
+     * @method _handleChange
+     * @example this._handleChange()
+     * @private 
+     * @returns {void}
+     */
+    private _handleChange (e: any) {
+        e.preventDefault();
+        let target = e.target;
+        let value = target.value;
+        let combinationId = target.getAttribute('data-id');
+        
+        // INPUT - NEW DISTANCE
+        let newCombination = {
+            distance: value,
+            id: combinationId
+        };
+
+        // Save combination updated in Local State
+        this.setState(prevState => ({
+            combinationsUpdated: [...prevState.combinationsUpdated, newCombination]
+        }));
+        
+    }
 
     /**
      * @desc HandleClick
@@ -70,49 +109,29 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
      * @returns {void}
      */
     private _saveDistances() {
-        // Save changes 
-    }
+        /* 
+            Select each combination in order to validate if the distance is 
+            into min and max range
+        */
+        this.state.combinationsUpdated.forEach(combination => {
+             
+             // INPUT - NEW DISTANCE
+            let input = {
+                distance: combination.distance,
+                id: combination.id
+            };
 
+            this.props.mutate({
+                variables: {input},
+                refetchQueries: [{ query: GET_ALL_THINGS_QUERY }],
+            }).then(
+                () => {
+                    // tslint:disable-next-line:no-console
+                    console.log('DISTANCE UPDATED', input);   
+                }
+            );
 
-    /********************************/
-    /*       COMPONENTDIDMOUNT      */
-    /********************************/
-    componentDidMount() {   
-        //
-    }
-
-
-    /********************************/
-    /*      COMPONENTWILLMOUNT      */
-    /********************************/
-    componentWillMount() {  
-        /* NOTE: Se invoca una sola vez, 
-        inmediatamente ANTES de que el renderizado inicial ocurra */
-    }
-
-
-    /********************************/
-    /*      COMPONENTWILLUNMOUNT    */
-    /********************************/
-    componentWillUnmount() {        
-        /* NOTE: Se invoca inmediatamente ANTES de que 
-            el el componente es desmontado del el DOM */
-    }
-
-
-    /********************************/
-    /*        PUBLIC METHODS        */
-    /********************************/
-
-    /**
-     * @desc Method description
-     * @method toggleChecked
-     * @example this.toggleChecked()
-     * @public
-     * @returns {void}
-     */
-    toggleChecked(): void {
-        //
+        });
     }
 
     
@@ -142,7 +161,7 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
                         </h3>
                     </div>
                 </div>{/* Real-time sensor ranges list */}
-                <RealTimeSensorList parts={parts}/>
+                <RealTimeSensorList parts={parts} onInputChange={this._handleChange}/>
 
                 <hr className="borderStyle-dashed mb-5" />
 
@@ -150,7 +169,7 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps, {}>, {}> {
                 <div className="row mb-5">
                     <div className="col">
                         <button className="btn btn-success btn-lg btn-block"
-                                onClick={() => this._handleClick(this)}>
+                                onClick={this._handleClick}>
                             Save
                         </button>
                     </div>

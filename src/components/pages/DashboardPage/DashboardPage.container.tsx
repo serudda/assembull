@@ -58,7 +58,7 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
     /********************************/
     /*         CONSTRUCTOR          */
     /********************************/
-    constructor() {        
+    constructor() {    
         super();
 
         // Bind methods
