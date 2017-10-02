@@ -23,6 +23,7 @@ export const THING_FRAGMENT = gql`
                 min
                 max
                 distance
+                status
                 __typename
             }
         }

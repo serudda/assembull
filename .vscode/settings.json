@@ -1,0 +1,24 @@
+{
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true
+    },
+    "search.exclude": {
+        "**/node_modules": true
+    },
+    "tslint.ignoreDefinitionFiles": false,
+    "tslint.autoFixOnSave": true,
+    "tslint.exclude": "**/node_modules/**/*",
+    "todohighlight.keywords": [
+        {
+            "text": "NOTE:",
+            "color": "#000000",
+            "backgroundColor": "#CCCCCC"
+        }
+    ]
+}

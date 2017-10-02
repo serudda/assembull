@@ -31,7 +31,7 @@ const Main: React.SFC<IMainProps> = () => {
                 <Switch>
                     {/* tslint:disable-next-line:jsx-boolean-value */}
                     <Route exact path="/" component={HomePage} />
-                    <Route path="/dashboard" component={DashboardPage} />
+                    <Route path="/dashboard/:id" component={DashboardPage} />
                     {/*<Route path="/baseline/config" component={BaselineSensorPage} />*/}
                     {/*<Route path="/sensor/config" component={RealTimeSensorPage} />*/}
                     <Route component={NotFoundPage} />
