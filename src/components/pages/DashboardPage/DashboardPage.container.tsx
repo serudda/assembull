@@ -171,16 +171,22 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
                 {/* Go to Real-time section and Baseline section */}
                 <div className="row">
                     <div className="col text-center">
-                        <button data-section="RealTimeSensorListContainer"
+                        <div>
+                            <a data-section="RealTimeSensorListContainer"
+                                href="#"
                                 className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
                                 onClick={this._handleClick}>
-                            Real-time sensor manage
-                        </button>
-                        <button data-section="BaselineSensorListContainer"
+                                Real-time sensor manage
+                            </a>
+                        </div>
+                        <div>
+                            <a data-section="BaselineSensorListContainer"
+                                href="#"
                                 className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
                                 onClick={this._handleClick}>
-                            Baseline sensor manage
-                        </button>
+                                Baseline sensor manage
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
