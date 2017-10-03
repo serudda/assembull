@@ -6,9 +6,6 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from '../HomePage/HomePage.container';
 import DashboardPage from '../DashboardPage/DashboardPage.container';
-// import ProgressPage from '../ProgressPage/ProgressPage.container';
-// import BaselineSensorPage from '../BaselineSensorPage/BaselineSensorPage.container';
-// import RealTimeSensorPage from '../RealTimeSensorPage/RealTimeSensorPage.container';
 import NotFoundPage from '../NotFoundPage/NotFoundPage.presentation';
 
 
@@ -32,8 +29,6 @@ const Main: React.SFC<IMainProps> = () => {
                     {/* tslint:disable-next-line:jsx-boolean-value */}
                     <Route exact path="/" component={HomePage} />
                     <Route path="/dashboard/:id" component={DashboardPage} />
-                    {/*<Route path="/baseline/config" component={BaselineSensorPage} />*/}
-                    {/*<Route path="/sensor/config" component={RealTimeSensorPage} />*/}
                     <Route component={NotFoundPage} />
                 </Switch>
             </div>
