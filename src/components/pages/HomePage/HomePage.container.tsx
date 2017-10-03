@@ -46,7 +46,7 @@ class HomePageContainer extends React.Component<IOwnProps & IStateProps, {}> {
         /***************************/
         return (
             <div className="HomePage">
-                <Link to="/dashboard/2" className="nav-link">
+                <Link to="/dashboard/1" className="nav-link">
                     Home
                 </Link>
             </div>
