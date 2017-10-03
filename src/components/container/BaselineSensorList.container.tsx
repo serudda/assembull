@@ -7,9 +7,9 @@ import { connect, Dispatch } from 'react-redux';
 
 import { Part } from '../../models/part/part.model';
 
-import { closeRealTimeSectionAction } from '../../actions/ui.action';
+import { closeBaselineSectionAction } from '../../actions/ui.action';
 
-import RealTimeSensorList from '../common/RealTimeSensorList/RealTimeSensorList';
+import BaselineSensorList from '../common/BaselineSensorList/BaselineSensorList';
 import { UPDATE_COMBINATION_MUTATION } from '../../models/combination/combination.mutation';
 import { GET_ALL_THINGS_QUERY } from '../../models/thing/thing.query';
 import { IUiState } from '../../reducers/ui.reducer';
@@ -23,7 +23,7 @@ import { IRootState } from '../../reducers/reducer.config';
 /********************************/
 
 /* Own Props */
-type RealTimeSensorListContainerProps = {
+type BaselineSensorListContainerProps = {
     parts: Array<Part>;
 };
 
@@ -36,7 +36,7 @@ type IStateProps = {
 type IDispatchProps = {
     actions: {
         ui: {
-            closeRealTimeSection: () => void;
+            closeBaselineSection: () => void;
         }
     };
 };
@@ -44,7 +44,8 @@ type IDispatchProps = {
 type LocalStates = { 
     combinationsUpdated: Array<{
         id: number,
-        distance: string
+        min: number,
+        max: number
     }>;
 };
 
@@ -52,9 +53,8 @@ type LocalStates = {
 /***********************************************/
 /*              CLASS DEFINITION               */
 /***********************************************/
-class RealTimeSensorListContainer 
-extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProps & IDispatchProps, {}>, LocalStates> {
-
+class BaselineSensorListContainer 
+extends React.Component<ChildProps<BaselineSensorListContainerProps & IStateProps & IDispatchProps, {}>, LocalStates> {
     
     /********************************/
     /*         CONSTRUCTOR          */
@@ -93,10 +93,11 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
         let target = e.target;
         let value = target.value;
         let combinationId = target.getAttribute('data-id');
+        let key = target.getAttribute('data-key');
         
         // INPUT - NEW DISTANCE
         let newCombination = {
-            distance: value,
+            [key]: value,
             id: combinationId
         };
 
@@ -116,18 +117,18 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
      */
     private _handleClick (e: any) {
         e.preventDefault();
-        this._saveDistances();
+        this._saveCombinationsUpdated();
     }
 
 
     /**
-     * @desc Save Distances
-     * @method _saveDistances
-     * @example this._saveDistances()
+     * @desc Save Min & Max Properties
+     * @method _saveCombinationsUpdated
+     * @example this._saveCombinationsUpdated()
      * @private 
      * @returns {void}
      */
-    private _saveDistances() {
+    private _saveCombinationsUpdated() {
         /* 
             Select each combination in order to validate if the distance is 
             into min and max range
@@ -136,7 +137,8 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
              
              // INPUT - NEW DISTANCE
             let input = {
-                distance: combination.distance,
+                min: combination.min,
+                max: combination.max,
                 id: combination.id
             };
 
@@ -146,26 +148,25 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
             }).then(
                 () => {
                     // tslint:disable-next-line:no-console
-                    console.log('DISTANCE UPDATED', input);   
+                    console.log('COMBINATION UPDATED');
                 }
             );
 
         });
 
-        this._closeRealTimeSection();
-
+        this._closeBaselineSection();
     }
 
 
     /**
-     * @desc Close Real Time section
-     * @method _closeRealTimeSection
-     * @example this._closeRealTimeSection()
+     * @desc Close Baseline section
+     * @method _closeBaselineSection
+     * @example this._closeBaselineSection()
      * @private 
      * @returns {void}
      */
-    _closeRealTimeSection() {
-        this.props.actions.ui.closeRealTimeSection();
+    _closeBaselineSection() {
+        this.props.actions.ui.closeBaselineSection();
     }
 
     
@@ -185,17 +186,19 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
         /*         MARKUP          */
         /***************************/
         return (
-            <section className="RealTimeSensorListContainer container">             
+            <section className="BaselineSensorListContainer container">             
 
                 {/* Title */}
                 <div className="row mb-4">
                     <div className="col text-center">
                         <h3>
-                            Real-Time Sensor Manage
+                            Baseline Sensor Manage
                         </h3>
                     </div>
-                </div>{/* Real-time sensor ranges list */}
-                <RealTimeSensorList parts={parts} onInputChange={this._handleChange}/>
+                </div>
+                
+                {/* Real-time sensor ranges list */}
+                <BaselineSensorList parts={parts} onMinInputChange={this._handleChange} onMaxInputChange={this._handleChange}/>
 
                 <hr className="borderStyle-dashed mb-5" />
 
@@ -235,7 +238,7 @@ function mapDispatchToProps(dispatch: Dispatch<IRootState>): IDispatchProps {
     return {
         actions: {
             ui: {
-                closeRealTimeSection: () => dispatch(closeRealTimeSectionAction())
+                closeBaselineSection: () => dispatch(closeBaselineSectionAction())
             }
         }
     };
@@ -253,12 +256,12 @@ const updateCombinationMutation = graphql<any, any>(
 /********************************/
 /*         REDUX CONNECT        */
 /********************************/
-const realTimeSensorListContainerConnect = connect(mapStateToProps, mapDispatchToProps); 
+const baselineSensorListContainerConnect = connect(mapStateToProps, mapDispatchToProps); 
 
 
 /*         EXPORT          */
 /***************************/
 export default compose(
     updateCombinationMutation,
-    realTimeSensorListContainerConnect
-)(RealTimeSensorListContainer);
+    baselineSensorListContainerConnect
+)(BaselineSensorListContainer);

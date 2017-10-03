@@ -11,6 +11,7 @@ import { Action } from '../actions/ui.action';
 
 export interface IUiState {
     openRealTimeSection: boolean;
+    openBaselineSection: boolean;
 }
 
 /************************************/
@@ -18,17 +19,18 @@ export interface IUiState {
 /************************************/
 
 const defaultState: IUiState = {
-    openRealTimeSection: false
+    openRealTimeSection: false,
+    openBaselineSection: false
 };
 
 // -----------------------------------
 
 
 /** 
- * @desc This function takes Color Palette actions and return a new state 
- * @param {IColorPaletteState} [state=defaultState] 
+ * @desc This function takes UI actions and return a new state 
+ * @param {IUiState} [state=defaultState] 
  * @param {Action} action 
- * @returns {IColorPaletteState} 
+ * @returns {IUiState} 
  */
 export default function (state: IUiState = defaultState, action: Action): IUiState {
 
@@ -44,6 +46,14 @@ export default function (state: IUiState = defaultState, action: Action): IUiSta
 
         case types.CLOSE_REALTIME_SECTION: {
             return {...state, openRealTimeSection: false};
+        }
+
+        case types.OPEN_BASELINE_SECTION: {
+            return {...state, openBaselineSection: true};
+        }
+
+        case types.CLOSE_BASELINE_SECTION: {
+            return {...state, openBaselineSection: false};
         }
             
         default:

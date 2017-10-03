@@ -8,12 +8,17 @@ import { connect, Dispatch } from 'react-redux';
 // Las dependencias de mis queries, mutations, subscriptions
 import { GET_THING_BY_ID_QUERY, GetByIdResponse } from '../../../models/thing/thing.query';
 
-import { openRealTimeSectionAction } from '../../../actions/ui.action';
+import { openRealTimeSectionAction,
+         closeRealTimeSectionAction,
+         openBaselineSectionAction, 
+         closeBaselineSectionAction } from '../../../actions/ui.action';
+
 import { IRootState } from '../../../reducers/reducer.config';
 import { IUiState } from '../../../reducers/ui.reducer';
 
 import ProgressListContainer from '../../container/ProgressList.container';
 import RealTimeSensorListContainer from '../../container/RealTimeSensorList.container';
+import BaselineSensorListContainer from '../../container/BaselineSensorList.container';
 // -----------------------------------
 
 
@@ -34,6 +39,9 @@ type IDispatchProps = {
     actions: {
         ui: {
             openRealTimeSection: () => void;
+            closeRealTimeSection: () => void;
+            openBaselineSection: () => void;
+            closeBaselineSection: () => void;
         }
     };
 };
@@ -67,33 +75,6 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
 
 
     /********************************/
-    /*       COMPONENTDIDMOUNT      */
-    /********************************/
-    componentDidMount() {
-        /* NOTE: Se invoca una sola vez, 
-        inmediatamente DESPUES de que el renderizado inicial ocurra */
-    }
-
-
-    /********************************/
-    /*      COMPONENTWILLMOUNT      */
-    /********************************/
-    componentWillMount() {
-        /* NOTE: Se invoca una sola vez, 
-        inmediatamente ANTES de que el renderizado inicial ocurra */
-    }
-
-
-    /********************************/
-    /*      COMPONENTWILLUNMOUNT    */
-    /********************************/
-    componentWillUnmount() {   
-        /* NOTE: Se invoca inmediatamente ANTES de que 
-            el el componente es desmontado del el DOM */
-    }
-
-
-    /********************************/
     /*       PRIVATE METHODS        */
     /********************************/
 
@@ -106,7 +87,23 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
      */
     _handleClick = (e: any) => {
         e.preventDefault();
-        this._openRealTimeSection();
+        let target = e.target;
+        let section = target.getAttribute('data-section');
+
+        const BASELINE_SENSOR_LIST_CONTAINER = 'BaselineSensorListContainer';
+        const REALTIME_SENSOR_LIST_CONTAINER = 'RealTimeSensorListContainer';
+
+        switch (section) {
+            case BASELINE_SENSOR_LIST_CONTAINER:
+                this._openBaselineSection();
+                break;
+            case REALTIME_SENSOR_LIST_CONTAINER:
+                this._openRealTimeSection();
+                break;
+        
+            default:
+                break;
+        }
     }
 
     /**
@@ -117,8 +114,20 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
      * @returns {void}
      */
     _openRealTimeSection() {
-        // tslint:disable-next-line:no-console
         this.props.actions.ui.openRealTimeSection();
+        this.props.actions.ui.closeBaselineSection();
+    }
+
+    /**
+     * @desc Open Baseline section
+     * @method _openBaselineSection
+     * @example this._openBaselineSection()
+     * @private 
+     * @returns {void}
+     */
+    _openBaselineSection() {
+        this.props.actions.ui.openBaselineSection();
+        this.props.actions.ui.closeRealTimeSection();
     }
 
     
@@ -153,19 +162,23 @@ extends React.Component<ChildProps<DashboardPageProps & IStateProps & IDispatchP
         /***************************/
         return (
             <div className="DashboardPage">
-                {!ui.openRealTimeSection && <ProgressListContainer parts={data.thing.parts}/>}
-                {ui.openRealTimeSection && <RealTimeSensorListContainer parts={data.thing.parts}/>}
+                {!ui.openRealTimeSection && !ui.openBaselineSection && <ProgressListContainer parts={data.thing.parts}/>}
+                {ui.openRealTimeSection  && !ui.openBaselineSection && <RealTimeSensorListContainer parts={data.thing.parts}/>}
+                {ui.openBaselineSection  && !ui.openRealTimeSection && <BaselineSensorListContainer parts={data.thing.parts}/>}
 
                 <hr className="m-4" />
                 
                 {/* Go to Real-time section and Baseline section */}
                 <div className="row">
                     <div className="col text-center">
-                        <button className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
+                        <button data-section="RealTimeSensorListContainer"
+                                className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
                                 onClick={this._handleClick}>
                             Real-time sensor manage
                         </button>
-                        <button className="color-silver fontSize-xl fontWeight-2 textDecoration-underline">
+                        <button data-section="BaselineSensorListContainer"
+                                className="color-silver fontSize-xl fontWeight-2 textDecoration-underline"
+                                onClick={this._handleClick}>
                             Baseline sensor manage
                         </button>
                     </div>
@@ -194,9 +207,12 @@ function mapStateToProps(state: IRootState): IStateProps {
 /********************************/
 function mapDispatchToProps(dispatch: Dispatch<IRootState>): IDispatchProps {
     return {
-        actions:  {
+        actions: {
             ui: {
-                openRealTimeSection: () => dispatch(openRealTimeSectionAction())
+                openRealTimeSection: () => dispatch(openRealTimeSectionAction()),
+                closeRealTimeSection: () => dispatch(closeRealTimeSectionAction()),
+                openBaselineSection: () => dispatch(openBaselineSectionAction()),
+                closeBaselineSection: () => dispatch(closeBaselineSectionAction())
             }
         }
     };

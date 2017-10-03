@@ -17,11 +17,23 @@ export interface ICloseRealTimeSectionAction {
     openRealTimeSection: boolean;
 }
 
+export interface IOpenBaselineSectionAction {
+    type: types.OPEN_BASELINE_SECTION;
+    openBaselineSection: boolean;
+}
+
+export interface ICloseBaselineSectionAction {
+    type: types.CLOSE_BASELINE_SECTION;
+    openBaselineSection: boolean;
+}
+
 
 export type Action = 
     // UI interaction
     IOpenRealTimeSectionAction 
-|   ICloseRealTimeSectionAction;
+|   ICloseRealTimeSectionAction
+|   IOpenBaselineSectionAction
+|   ICloseBaselineSectionAction;
 
 
 
@@ -54,6 +66,34 @@ export const closeRealTimeSectionAction = (): Action => {
     return {
         type: types.CLOSE_REALTIME_SECTION,
         openRealTimeSection: false
+    };
+};
+
+
+/**
+ * @desc Return an action type, OPEN_BASELINE_SECTION 
+ * to indicate that user wants opening Baseline Sensor Section
+ * @function openBaselineSectionAction
+ * @returns {Action}
+ */
+export const openBaselineSectionAction = (): Action => {
+    return {
+        type: types.OPEN_BASELINE_SECTION,
+        openBaselineSection: true
+    };
+};
+
+
+/**
+ * @desc Return an action type, CLOSE_BASELINE_SECTION 
+ * to indicate that user wants closing Baseline Sensor Section
+ * @function closeBaselineSectionAction
+ * @returns {Action}
+ */
+export const closeBaselineSectionAction = (): Action => {
+    return {
+        type: types.CLOSE_BASELINE_SECTION,
+        openBaselineSection: false
     };
 };
 

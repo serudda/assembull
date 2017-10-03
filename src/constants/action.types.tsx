@@ -14,6 +14,12 @@ export type OPEN_REALTIME_SECTION = typeof OPEN_REALTIME_SECTION;
 export const CLOSE_REALTIME_SECTION = 'CLOSE_REALTIME_SECTION';
 export type CLOSE_REALTIME_SECTION = typeof CLOSE_REALTIME_SECTION;
 
+export const OPEN_BASELINE_SECTION = 'OPEN_BASELINE_SECTION';
+export type OPEN_BASELINE_SECTION = typeof OPEN_BASELINE_SECTION;
+
+export const CLOSE_BASELINE_SECTION = 'CLOSE_BASELINE_SECTION';
+export type CLOSE_BASELINE_SECTION = typeof CLOSE_BASELINE_SECTION;
+
 
 /*
  * Es necesario crear un 'type' a cada constante si queremos asignarla despues a una interface
