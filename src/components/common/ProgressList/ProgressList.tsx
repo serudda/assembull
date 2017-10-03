@@ -35,23 +35,39 @@ const ProgressList: React.SFC<ProgressListProps> = ({ parts }) => {
         const WARNING_CLASS = 'color-warning fontSize-xxl fa fa-exclamation-circle';
         const NORMAL_CLASS = 'color-silver fontSize-xxl fa fa-circle-o';
         let statusClass = NORMAL_CLASS;
+        let BreakException = {};
 
-        combinations.forEach(combination => {
-            switch (combination.status) {
-                case Status.OK:
-                    statusClass = OK_CLASS;
-                    break;
-                case Status.WARNING:
-                    statusClass = WARNING_CLASS;
-                    break;
-                case Status.NORMAL:
-                    statusClass = NORMAL_CLASS;
-                    break;
-                default:
-                    statusClass = NORMAL_CLASS;
-                    break;
-            }
-        });
+        try {
+            combinations.forEach(combination => {
+                
+                let isWarning = false;
+                
+                switch (combination.status) {
+                    case Status.OK:
+                        statusClass = OK_CLASS;
+                        break;
+                    case Status.WARNING: {
+    
+                        statusClass = WARNING_CLASS;
+                        isWarning = true;
+                        break;
+                    }
+                    case Status.NORMAL:
+                        statusClass = NORMAL_CLASS;
+                        break;
+                    default:
+                        statusClass = NORMAL_CLASS;
+                        break;
+                }
+    
+                if (isWarning) {
+                    throw BreakException; 
+                }
+    
+            });
+        } catch (error) {
+            if (error !== BreakException) {throw error; }
+        }
 
         return statusClass;
     }

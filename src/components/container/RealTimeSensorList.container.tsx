@@ -89,9 +89,9 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
      * @returns {void}
      */
     private _handleChange (e: any) {
-        e.preventDefault();
+        // e.preventDefault();
         let target = e.target;
-        let value = target.value;
+        let value = target.value || 0;
         let combinationId = target.getAttribute('data-id');
         
         // INPUT - NEW DISTANCE
@@ -99,6 +99,8 @@ extends React.Component<ChildProps<RealTimeSensorListContainerProps & IStateProp
             distance: value,
             id: combinationId
         };
+
+        // this.setState({[combinationId]: e.target.value});
 
         // Save combination updated in Local State
         this.setState(prevState => ({

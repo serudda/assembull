@@ -60,7 +60,7 @@ const BaselineSensorList: React.SFC<BaselineSensorListProps> = ({ parts, onMinIn
                                             <input  data-id={combination.id}
                                                     data-key="min" 
                                                     type="text" 
-                                                    value={combination.min} 
+                                                    defaultValue={combination.min.toString()}
                                                     style={{width: '100px'}} 
                                                     onChange={onMinInputChange}/>
                                         </div>
@@ -68,7 +68,7 @@ const BaselineSensorList: React.SFC<BaselineSensorListProps> = ({ parts, onMinIn
                                             <input  data-id={combination.id} 
                                                     data-key="max"
                                                     type="text" 
-                                                    value={combination.max} 
+                                                    defaultValue={combination.max.toString()}
                                                     style={{width: '100px'}} 
                                                     onChange={onMaxInputChange}/>
                                         </div>

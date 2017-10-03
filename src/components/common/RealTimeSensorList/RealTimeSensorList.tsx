@@ -55,8 +55,8 @@ const RealTimeSensorList: React.SFC<RealTimeSensorListProps> = ({ parts, onInput
                                         <p className="color-silver mr-3" style={{width: '90px'}}>R - {combination.label}</p>
                                         <div className="form-group">
                                             <input  data-id={combination.id} 
-                                                    type="text" 
-                                                    value={combination.distance} 
+                                                    type="text"
+                                                    defaultValue={combination.distance.toString()}
                                                     style={{width: '100px'}} 
                                                     onChange={onInputChange}/>
                                         </div>

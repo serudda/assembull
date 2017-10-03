@@ -91,7 +91,7 @@ extends React.Component<ChildProps<BaselineSensorListContainerProps & IStateProp
     private _handleChange (e: any) {
         e.preventDefault();
         let target = e.target;
-        let value = target.value;
+        let value = target.value || 0;
         let combinationId = target.getAttribute('data-id');
         let key = target.getAttribute('data-key');
         
