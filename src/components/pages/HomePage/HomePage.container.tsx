@@ -2,6 +2,7 @@
 /*           DEPENDENCIES           */
 /************************************/
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 
 /************************************/
@@ -45,7 +46,9 @@ class HomePageContainer extends React.Component<IOwnProps & IStateProps, {}> {
         /***************************/
         return (
             <div className="HomePage">
-                HomePage
+                <Link to="/dashboard/2" className="nav-link">
+                    Home
+                </Link>
             </div>
         );
     }
